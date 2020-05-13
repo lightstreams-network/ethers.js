@@ -767,7 +767,7 @@ var BaseProvider = /** @class */ (function (_super) {
             return properties_1.resolveProperties({ signedTransaction: signedTransaction }).then(function (_a) {
                 var signedTransaction = _a.signedTransaction;
                 var params = { signedTransaction: bytes_1.hexlify(signedTransaction) };
-                return _this.perform('sendTransaction', params).then(function (hash) {
+                return _this.perform('sendSignedTransaction', params).then(function (hash) {
                     return _this._wrapTransaction(transaction_1.parse(signedTransaction), hash);
                 }, function (error) {
                     error.transaction = transaction_1.parse(signedTransaction);

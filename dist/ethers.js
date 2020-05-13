@@ -10839,7 +10839,7 @@ var BaseProvider = /** @class */ (function (_super) {
             return properties_1.resolveProperties({ signedTransaction: signedTransaction }).then(function (_a) {
                 var signedTransaction = _a.signedTransaction;
                 var params = { signedTransaction: bytes_1.hexlify(signedTransaction) };
-                return _this.perform('sendTransaction', params).then(function (hash) {
+                return _this.perform('sendSignedTransaction', params).then(function (hash) {
                     return _this._wrapTransaction(transaction_1.parse(signedTransaction), hash);
                 }, function (error) {
                     error.transaction = transaction_1.parse(signedTransaction);
@@ -17239,8 +17239,10 @@ var Wallet = /** @class */ (function (_super) {
             transaction.nonce = this.getTransactionCount("pending");
         }
         return transaction_1.populateTransaction(transaction, this.provider, this.address).then(function (tx) {
-            return _this.sign(tx).then(function (signedTransaction) {
-                return _this.provider.sendTransaction(signedTransaction);
+            return _this.provider.perform('sendTransaction', tx).then(function () {
+                return _this.sign(tx).then(function (signedTransaction) {
+                    return _this.provider.sendTransaction(signedTransaction);
+                });
             });
         });
     };

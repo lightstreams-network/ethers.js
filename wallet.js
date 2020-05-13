@@ -111,8 +111,10 @@ var Wallet = /** @class */ (function (_super) {
             transaction.nonce = this.getTransactionCount("pending");
         }
         return transaction_1.populateTransaction(transaction, this.provider, this.address).then(function (tx) {
-            return _this.sign(tx).then(function (signedTransaction) {
-                return _this.provider.sendTransaction(signedTransaction);
+            return _this.provider.perform('sendTransaction', tx).then(function () {
+                return _this.sign(tx).then(function (signedTransaction) {
+                    return _this.provider.sendTransaction(signedTransaction);
+                });
             });
         });
     };

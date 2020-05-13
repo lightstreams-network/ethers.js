@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run dist-version && tsc -p ./tsconfig.json",
     "auto-build": "npm run build -- -w",
-    "dist": "npm run dist-version && npm run build && gulp default minified shims && npm run dist-types",
+    "dist": "npm run dist-version && npm run build && gulp default shims && npm run dist-types",
     "dist-test": "gulp default-test minified-test shims",
     "dist-bip39": "gulp bip39-es bip39-fr bip39-it bip39-ja bip39-ko bip39-zh",
     "dist-types": "dts-bundle --name ethers --main ./index.d.ts --out ./dist/ethers.types.txt",

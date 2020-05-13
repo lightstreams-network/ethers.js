@@ -881,7 +881,7 @@ export class BaseProvider extends Provider {
         return this.ready.then(() => {
             return resolveProperties({ signedTransaction: signedTransaction }).then(({ signedTransaction }) => {
                 let params = { signedTransaction: hexlify(signedTransaction) };
-                return this.perform('sendTransaction', params).then((hash) => {
+                return this.perform('sendSignedTransaction', params).then((hash) => {
                     return this._wrapTransaction(parseTransaction(signedTransaction), hash);
                 }, function (error) {
                     error.transaction = parseTransaction(signedTransaction);
