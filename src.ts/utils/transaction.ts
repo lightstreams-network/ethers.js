@@ -78,7 +78,7 @@ const transactionFields = [
 ];
 
 const allowedTransactionKeys: { [ key: string ]: boolean } = {
-    chainId: true, data: true, gasLimit: true, gasPrice:true, nonce: true, to: true, value: true
+    chainId: true, data: true, gasLimit: true, gasPrice:true, nonce: true, to: true, value: true, contract: true
 }
 
 export function serialize(transaction: UnsignedTransaction, signature?: Arrayish | Signature): string {

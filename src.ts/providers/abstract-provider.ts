@@ -10,6 +10,7 @@ import { BigNumberish } from '../utils/bignumber';
 import { Network } from '../utils/networks';
 import { OnceBlockable } from '../utils/web';
 import { Transaction } from '../utils/transaction';
+import { Contract } from '../contract';
 
 ///////////////////////////////
 // Exported Types
@@ -98,6 +99,8 @@ export type TransactionRequest = {
     data?: Arrayish | Promise<Arrayish>,
     value?: BigNumberish | Promise<BigNumberish>,
     chainId?: number | Promise<number>,
+
+    contract?: Contract | Promise<Contract>,
 }
 
 export interface TransactionResponse extends Transaction {

@@ -39,7 +39,7 @@ var transactionFields = [
     { name: 'data' },
 ];
 var allowedTransactionKeys = {
-    chainId: true, data: true, gasLimit: true, gasPrice: true, nonce: true, to: true, value: true
+    chainId: true, data: true, gasLimit: true, gasPrice: true, nonce: true, to: true, value: true, contract: true
 };
 function serialize(transaction, signature) {
     properties_1.checkProperties(transaction, allowedTransactionKeys);

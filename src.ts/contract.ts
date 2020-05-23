@@ -270,6 +270,8 @@ function runMethod(contract: Contract, functionName: string, estimateOnly: boole
                     errors.throwError('cannot override from in a transaction', errors.UNSUPPORTED_OPERATION, { operation: 'sendTransaction' })
                 }
 
+                tx.contract = contract;
+
                 return contract.signer.sendTransaction(tx).then((tx) => {
                     let wait = tx.wait.bind(tx);
 

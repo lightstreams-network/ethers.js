@@ -210,6 +210,7 @@ function runMethod(contract, functionName, estimateOnly) {
                 if (tx.from != null) {
                     errors.throwError('cannot override from in a transaction', errors.UNSUPPORTED_OPERATION, { operation: 'sendTransaction' });
                 }
+                tx.contract = contract;
                 return contract.signer.sendTransaction(tx).then(function (tx) {
                     var wait = tx.wait.bind(tx);
                     tx.wait = function (confirmations) {

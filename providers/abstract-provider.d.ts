@@ -4,6 +4,7 @@ import { BigNumberish } from '../utils/bignumber';
 import { Network } from '../utils/networks';
 import { OnceBlockable } from '../utils/web';
 import { Transaction } from '../utils/transaction';
+import { Contract } from '../contract';
 export interface Block {
     hash: string;
     parentHash: string;
@@ -67,6 +68,7 @@ export declare type TransactionRequest = {
     data?: Arrayish | Promise<Arrayish>;
     value?: BigNumberish | Promise<BigNumberish>;
     chainId?: number | Promise<number>;
+    contract?: Contract | Promise<Contract>;
 };
 export interface TransactionResponse extends Transaction {
     blockNumber?: number;
