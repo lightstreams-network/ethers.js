@@ -307,6 +307,8 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                     params.filter.address = getLowerCase(params.filter.address);
                 }
                 return this.send('eth_getLogs', [params.filter]);
+            case 'preSendTransaction':
+                return null;
             default:
                 break;
         }

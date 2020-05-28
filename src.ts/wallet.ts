@@ -98,10 +98,16 @@ export class Wallet extends AbstractSigner {
         }
 
         return populateTransaction(transaction, this.provider, this.address).then((tx) => {
-            return this.provider.perform('sendTransaction', tx).then(() => {
-                return this.sign(tx).then((signedTransaction) => {
-                    return this.provider.sendTransaction(signedTransaction);
-                });
+            let preSend = this.provider.perform('preSendTransaction', tx);   
+            if (preSend) {
+              return preSend.then( () => {
+                  return this.sign(tx).then(signedTransaction => {
+                      return this.provider.sendTransaction(signedTransaction);
+                  });
+              });
+            }     
+            return this.sign(tx).then(signedTransaction => {
+                return this.provider.sendTransaction(signedTransaction);
             });
         });
     }

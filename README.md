@@ -103,3 +103,9 @@ License
 -------
 
 Completely MIT Licensed. Including ALL dependencies.
+
+## Build 
+To build dist folder, run:
+```
+$ npm run dist
+```

@@ -334,6 +334,9 @@ export class JsonRpcProvider extends BaseProvider {
                     params.filter.address = getLowerCase(params.filter.address);
                 }
                 return this.send('eth_getLogs', [ params.filter ]);
+                
+            case 'preSendTransaction':
+                return null;
 
             default:
                 break;

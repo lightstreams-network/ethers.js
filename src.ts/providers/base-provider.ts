@@ -881,8 +881,12 @@ export class BaseProvider extends Provider {
         return this.ready.then(() => {
             return resolveProperties({ signedTransaction: signedTransaction }).then(({ signedTransaction }) => {
                 let params = { signedTransaction: hexlify(signedTransaction) };
-                return this.perform('sendSignedTransaction', params).then((hash) => {
-                    return this._wrapTransaction(parseTransaction(signedTransaction), hash);
+                return this.perform('sendTransaction', params).then((hash) => {
+                    let tx = this._wrapTransaction(parseTransaction(signedTransaction), hash);
+                    if (this.constructor.name === "GsnProvider") {
+                      tx.hash = hash;
+                    }
+                    return tx;
                 }, function (error) {
                     error.transaction = parseTransaction(signedTransaction);
                     if (error.transaction.hash) {
@@ -902,7 +906,9 @@ export class BaseProvider extends Provider {
 
         // Check the hash we expect is the same as the hash the server reported
         if (hash != null && tx.hash !== hash) {
-            errors.throwError('Transaction hash mismatch from Provider.sendTransaction.', errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
+            if (this.constructor.name !== "GsnProvider") {
+              errors.throwError('Transaction hash mismatch from Provider.sendTransaction.', errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
+            }
         }
 
         // @TODO: (confirmations? number, timeout? number)

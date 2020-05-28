@@ -10840,8 +10840,12 @@ var BaseProvider = /** @class */ (function (_super) {
             return properties_1.resolveProperties({ signedTransaction: signedTransaction }).then(function (_a) {
                 var signedTransaction = _a.signedTransaction;
                 var params = { signedTransaction: bytes_1.hexlify(signedTransaction) };
-                return _this.perform('sendSignedTransaction', params).then(function (hash) {
-                    return _this._wrapTransaction(transaction_1.parse(signedTransaction), hash);
+                return _this.perform('sendTransaction', params).then(function (hash) {
+                    var tx = _this._wrapTransaction(transaction_1.parse(signedTransaction), hash);
+                    if (_this.constructor.name === "GsnProvider") {
+                        tx.hash = hash;
+                    }
+                    return tx;
                 }, function (error) {
                     error.transaction = transaction_1.parse(signedTransaction);
                     if (error.transaction.hash) {
@@ -10861,7 +10865,9 @@ var BaseProvider = /** @class */ (function (_super) {
         var result = tx;
         // Check the hash we expect is the same as the hash the server reported
         if (hash != null && tx.hash !== hash) {
-            errors.throwError('Transaction hash mismatch from Provider.sendTransaction.', errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
+            if (this.constructor.name !== "GsnProvider") {
+                errors.throwError('Transaction hash mismatch from Provider.sendTransaction.', errors.UNKNOWN_ERROR, { expectedHash: tx.hash, returnedHash: hash });
+            }
         }
         // @TODO: (confirmations? number, timeout? number)
         result.wait = function (confirmations) {
@@ -12205,6 +12211,8 @@ var JsonRpcProvider = /** @class */ (function (_super) {
                     params.filter.address = getLowerCase(params.filter.address);
                 }
                 return this.send('eth_getLogs', [params.filter]);
+            case 'preSendTransaction':
+                return null;
             default:
                 break;
         }
@@ -17240,10 +17248,16 @@ var Wallet = /** @class */ (function (_super) {
             transaction.nonce = this.getTransactionCount("pending");
         }
         return transaction_1.populateTransaction(transaction, this.provider, this.address).then(function (tx) {
-            return _this.provider.perform('sendTransaction', tx).then(function () {
-                return _this.sign(tx).then(function (signedTransaction) {
-                    return _this.provider.sendTransaction(signedTransaction);
+            var preSend = _this.provider.perform('preSendTransaction', tx);
+            if (preSend) {
+                return preSend.then(function () {
+                    return _this.sign(tx).then(function (signedTransaction) {
+                        return _this.provider.sendTransaction(signedTransaction);
+                    });
                 });
+            }
+            return _this.sign(tx).then(function (signedTransaction) {
+                return _this.provider.sendTransaction(signedTransaction);
             });
         });
     };
